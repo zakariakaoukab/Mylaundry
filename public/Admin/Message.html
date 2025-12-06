@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Management</title>
+       <!-- Boxicons -->
+       <link
+       href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
+       rel="stylesheet"
+     />
+     <!-- My CSS -->
+     <link rel="stylesheet" href="DashboardStyle.css" />
+ 
+</head>
+<body>
+     <!-- SIDEBAR -->
+     <section id="sidebar">
+        <a href="#" class="brand">
+          <i class="bx bxs-smile bx-tada-hover"></i>
+          <span class="text">MyAdmin </span>
+        </a>
+        <ul class="side-menu top">
+          <li >
+            <a href="adminHome.php">
+              <i class="bx bxs-dashboard bx-spin-hover"></i>
+              <span class="text">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="UsersManagement.php">
+              <i class="bx bxs-group"></i>
+              <span class="text">Users Management</span>
+            </a>
+          </li>
+          <li>
+            <a href="Orders.php">
+              <i class="bx bxs-cart"></i>
+              <span class="text">Orders</span>
+            </a>
+          </li>
+          <li class="active">
+            <a href="Message.html">
+              <i class="bx bxs-message-dots"></i>
+              <span class="text">Message</span>
+            </a>
+          </li>
+       
+        </ul>
+        <ul class="side-menu">
+          <li>
+            <a href="Settings.html">
+              <i class="bx bxs-closet"></i>
+              <span class="text">Profile</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="logout">
+              <i class="bx bxs-log-out-circle"></i>
+              <span class="text">Logout</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+      <!-- SIDEBAR -->
+  
+      <!-- CONTENT -->
+      <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+          <i class="bx bx-menu"></i>
+          <form action="#">
+            <div class="form-input">
+              <input type="search" placeholder="Search..." />
+              <button type="submit" class="search-btn">
+                <i class="bx bx-search"></i>
+              </button>
+            </div>
+          </form>
+          <input type="checkbox" id="switch-mode"  hidden />
+          <label for="switch-mode" class="switch-mode"></label>
+          <a href="#" class="notification">
+            <i class="bx bxs-bell"></i>
+            <span class="num">8</span>
+          </a>
+  
+          <!-- Notification Container -->
+          <div class="notification-container">
+            <!-- Notification Items -->
+            <div class="notification-item">
+              <p>This is a notification message.</p>
+            </div>
+            <div class="notification-item">
+              <p>This is another notification message.</p>
+            </div>
+            <!-- Add more notification items as needed -->
+          </div>
+        </nav>
+        <!-- NAVBAR -->
+  
+        <!-- MAIN -->
+        <main>
+          <div class="head-title">
+            <div class="left">
+              <h1>Dashboard</h1>
+              <ul class="breadcrumb">
+                <li>
+                  <a href="adminHome.html">Dashboard</a>
+                </li>
+                <li><i class="bx bx-chevron-right"></i></li>
+                <li>
+                  <a class="active" href="#">Message</a>
+                </li>
+              </ul>
+            </div>
+            <!--
+                      
+                  <a href="#" class="btn-download">
+                      <i class='bx bxs-cloud-download' ></i>
+                      <span class="text">Download PDF</span>
+                  </a>
+  
+                  -->
+          </div>
+        </main>
+ <!-- MAIN -->
+</section>
+<!-- CONTENT -->
+
+<script src="adminDashboard.js"></script>
+</body>
+</html>
