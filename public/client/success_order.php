@@ -59,7 +59,7 @@
                 <div class="message-box _success">
                     <i class="fa fa-check-circle" aria-hidden="true"></i>
                     <h2>Your payment was successful</h2>
-                    <p>Thank you for your payment. We will <br> be in contact with more details shortly.</p>
+                    <p>Thank you for your Order. We will <br> be in contact with more details shortly.</p>
                     <a href="track_page.php" id="btn" class="btn btn-primary">Track Your Order</a>
                 </div>
             </div>

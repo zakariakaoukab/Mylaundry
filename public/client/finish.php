@@ -11,6 +11,7 @@ if (!isset($_SESSION['authenticated'])) {
 if (isset($_SESSION['auth_user']['role']) && $_SESSION['auth_user']['role'] === 'admin') {
     $_SESSION['status'] = "Not Allowed";
     header("Location: ../signin.php");
+    exit();
 } else {
     // client is authenticated, allow access
     $role = $_SESSION['auth_user']['role'];
@@ -20,6 +21,36 @@ if (!isset($_SESSION['order_id'])) {
     exit();
 }
 $order_id = $_SESSION['order_id'];
+
+// Fetch user's phone number and other delivery info
+$user_id = $_SESSION['auth_user']['id_user'];
+$phone = '';
+$user_query = "SELECT phone FROM users WHERE id_user = ?";
+$stmt = $con->prepare($user_query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user_result = $stmt->get_result();
+if ($user_result->num_rows > 0) {
+    $user_row = $user_result->fetch_assoc();
+    $phone = $user_row['phone'];
+}
+$stmt->close();
+
+// Fetch order details from database
+$order_details = [];
+$query = "SELECT od.*, a.article_name, a.description FROM order_details od 
+          JOIN articles a ON od.article_id = a.id_article 
+          WHERE od.order_id = ?";
+$stmt = $con->prepare($query);
+$stmt->bind_param("i", $order_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $order_details[] = $row;
+}
+$stmt->close();
+$con->close();
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +68,9 @@ $order_id = $_SESSION['order_id'];
     <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <!-- PayPal SDK - COMMENTED OUT FOR CASH ON DELIVERY
     <script src="https://www.paypal.com/sdk/js?client-id=AdYH8ai1mVZnlCssDLk1q9MeFtviYxptlmO1YZtQaxvGEH80A_0_iZc4ulrVpwR2TrsDg_9dqYVERl2D&currency=USD"></script>
+    -->
     <style>
  /* Scroll bar styles */
      #style-4::-webkit-scrollbar-track {
@@ -122,6 +155,24 @@ $order_id = $_SESSION['order_id'];
             visibility: visible;
             opacity: 1;
         }  
+    /* Mobile menu opened - display horizontally */
+    #navMenu.menu-open {
+      flex-direction: row !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.5rem !important;
+      padding: 0.5rem !important;
+    }
+
+    #navMenu.menu-open .icon-container {
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    #navMenu.menu-open li {
+      margin-bottom: 0 !important;
+    }
+
     /* hr style*/
 
     .css-5t036d {
@@ -219,7 +270,7 @@ $order_id = $_SESSION['order_id'];
 
     </div>
 
-    <ul class="md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500">
+    <ul id="navMenu" class="md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500">
     <div class="icon-container">
     <li class="mx-4 md:my-0">
         <!--order now -->
@@ -336,10 +387,81 @@ $order_id = $_SESSION['order_id'];
   </div>
 </div>
         <hr class="css-5t036d">
-        <div class=" mt-4 mb-4 text-xl font-bold">Total : <span class="text-blue-600"><?php echo $_SESSION['total']." " ;?> DH</span></div>
+        
+        <!-- Cart Items Display -->
+        <div class="mt-6 mb-6">
+          <h2 class="text-2xl font-bold text-blue-900 mb-4">Your Order Summary</h2>
+          <div class="space-y-3">
+            <?php if (!empty($order_details)): ?>
+              <?php foreach ($order_details as $item): ?>
+                <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <div class="flex-1">
+                    <p class="font-semibold text-blue-900"><?php echo htmlspecialchars($item['article_name']); ?></p>
+                    <p class="text-sm text-blue-700"><?php echo htmlspecialchars($item['description']); ?></p>
+                  </div>
+                  <div class="text-right ml-4">
+                    <p class="text-sm text-blue-700">Qty: <span class="font-bold"><?php echo $item['quantity']; ?></span></p>
+                    <p class="font-bold text-blue-900"><?php echo number_format($item['price'] * $item['quantity'], 2); ?> DH</p>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <p class="text-blue-700 text-center py-4">No items in your order.</p>
+            <?php endif; ?>
+          </div>
+        </div>
+        
+        <hr class="css-5t036d">
+        
+        <!-- Delivery Information Section -->
+        <div class="mt-6 mb-6">
+          <h2 class="text-2xl font-bold text-blue-900 mb-4">Delivery Information</h2>
+          <div class="space-y-4">
+            <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <label class="block text-sm font-semibold text-blue-900 mb-2">Phone Number</label>
+              <input 
+                type="tel" 
+                id="deliveryPhone" 
+                class="w-full p-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-blue-900" 
+                placeholder="Enter your phone number"
+                value="<?php echo htmlspecialchars($phone); ?>"
+              >
+            </div>
+            
+            <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <label class="block text-sm font-semibold text-blue-900 mb-2">Delivery Address</label>
+              <textarea 
+                id="deliveryAddress" 
+                class="w-full p-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-blue-900" 
+                rows="3"
+                placeholder="Enter your delivery address"
+              ><?php echo htmlspecialchars(isset($_SESSION['address']) ? $_SESSION['address'] : ''); ?></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <hr class="css-5t036d">
+        
+        <div class="mt-6 mb-6 p-4 bg-gradient-to-r from-blue-100 to-blue-50 rounded-lg border-2 border-blue-400">
+          <div class="flex justify-between items-center">
+            <span class="text-2xl font-bold text-blue-900">Total Amount :</span>
+            <span class="text-3xl font-bold text-blue-600"><?php echo isset($_SESSION['total']) ? $_SESSION['total'] . " DH" : "0.00 DH"; ?></span>
+          </div>
+        </div>
+        
         <hr class="css-14ovxl9">
         <div class="flex justify-center mt-8">
-        <div class="w-80" id="paypal-button-container"></div>
+          <!-- PAYPAL BUTTON - COMMENTED OUT FOR CASH ON DELIVERY
+          <div class="w-80" id="paypal-button-container"></div>
+          -->
+          
+          <!-- CASH ON DELIVERY BUTTON -->
+          <button onclick="confirmCashOnDelivery()" class="font-bold text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-500 rounded-full text-xl px-16 mb-1 py-3 text-center inline-flex items-center">
+            <span class="font-mono mr-2">Confirm</span>
+            <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 16.17L4.83 12m0 0l-1.42 1.41L9 19 21 7m0 0l-1.41-1.41L9 16.17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="white"/>
+            </svg>
+          </button>
         </div>
 
       </div>
@@ -350,6 +472,29 @@ $order_id = $_SESSION['order_id'];
 
 
 
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
+      <h3 class="text-2xl font-bold text-blue-900 mb-4">Confirm Order</h3>
+      <p class="text-gray-700 mb-6">Are you sure you want to confirm this order ?</p>
+      
+      <div class="flex justify-end gap-4">
+        <button 
+          onclick="cancelConfirmation()" 
+          class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg transition duration-200"
+        >
+          Cancel
+        </button>
+        <button 
+          onclick="proceedWithConfirmation()" 
+          class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition duration-200"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
   </div>
 
    <!-- footer -->
@@ -380,6 +525,7 @@ $order_id = $_SESSION['order_id'];
   </div>
 </footer>
   
+  <!-- PAYPAL SCRIPT - COMMENTED OUT FOR CASH ON DELIVERY
   <script>
     paypal.Buttons({
       createOrder: function(data, actions) {
@@ -419,10 +565,76 @@ $order_id = $_SESSION['order_id'];
       }
     }).render('#paypal-button-container');
   </script>
+  -->
+  
+  <!-- CASH ON DELIVERY SCRIPT -->
+  <script>
+    function confirmCashOnDelivery() {
+      // Get delivery information from form fields
+      const phone = document.getElementById('deliveryPhone').value.trim();
+      const address = document.getElementById('deliveryAddress').value.trim();
+      
+      // Validate delivery information
+      if (!phone) {
+        alert('Please enter your phone number.');
+        return;
+      }
+      if (!address) {
+        alert('Please enter your delivery address.');
+        return;
+      }
+      
+      // Show confirmation modal instead of dialog
+      document.getElementById('confirmationModal').classList.remove('hidden');
+    }
+
+    function cancelConfirmation() {
+      // Hide the confirmation modal
+      document.getElementById('confirmationModal').classList.add('hidden');
+    }
+
+    function proceedWithConfirmation() {
+      // Get delivery information from form fields
+      const phone = document.getElementById('deliveryPhone').value.trim();
+      const address = document.getElementById('deliveryAddress').value.trim();
+      
+      // Hide the confirmation modal
+      document.getElementById('confirmationModal').classList.add('hidden');
+      
+      // Send request to update order status with delivery info
+      fetch('update_order_status.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          order_id: '<?php echo $order_id; ?>',
+          status: 'Confirmed',
+          phone: phone,
+          address: address,
+          user_id: '<?php echo $user_id; ?>'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Order confirmed! You will pay on delivery.');
+          window.location.href = 'success_order.php';
+        } else {
+          alert('Error confirming order: ' + (data.message || 'Unknown error'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      });
+    }
+  </script>
+  </script>
    <script>
     function Menu(e) {
       let list = document.querySelector('ul');
-      e.name === 'menu' ? (e.name = "close", list.classList.add('top-[80px]'), list.classList.add('opacity-100')) : (e.name = "menu", list.classList.remove('top-[80px]'), list.classList.remove('opacity-100'))
+      e.name === 'menu' ? (e.name = "close", list.classList.add('top-[80px]'), list.classList.add('opacity-100'), list.classList.add('menu-open')) : (e.name = "menu", list.classList.remove('top-[80px]'), list.classList.remove('opacity-100'), list.classList.remove('menu-open'))
     }
   </script>
 </body>

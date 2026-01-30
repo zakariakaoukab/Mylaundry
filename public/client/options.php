@@ -151,6 +151,24 @@ $con->close();
             opacity: 1;
         } 
 
+    /* Mobile menu opened - display horizontally */
+    #navMenu.menu-open {
+      flex-direction: row !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.5rem !important;
+      padding: 0.5rem !important;
+    }
+
+    #navMenu.menu-open .icon-container {
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    #navMenu.menu-open li {
+      margin-bottom: 0 !important;
+    }
+
     /* hr style*/
 
     .css-5t036d {
@@ -185,9 +203,9 @@ $con->close();
       height: 4px;
     }
 
-    /* Margin for large screens */
+    /* Margin for large screens - Now removed from here since it's in main-container */
     .large-margin {
-      margin-left: 12rem;
+      margin-left: 0;
     }
 
     .css-14yq2cq {
@@ -255,6 +273,130 @@ $con->close();
     /* Hide the articles container initially */
     #articles-container {
       display: none;
+    }
+
+    /* Main container for responsive layout */
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      gap: 3rem;
+      margin-left: 12rem;
+    }
+
+    .categories-section {
+      flex: 0 0 auto;
+    }
+
+    .articles-section {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Mobile responsive adjustments */
+    @media screen and (max-width: 1024px) {
+      .main-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+        margin-left: 0;
+      }
+
+      .categories-section {
+        width: 100%;
+      }
+
+      .articles-section {
+        flex: 1;
+        width: 100%;
+      }
+
+      /* Category buttons responsive */
+      .category-button {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      /* Articles responsive */
+      #articles {
+        margin-left: 0 !important;
+        flex-direction: column;
+      }
+
+      /* Articles container responsive */
+      .articles-container {
+        width: 100%;
+        margin-left: 0 !important;
+      }
+
+      /* Category description responsive */
+      .category-text {
+        width: 100% !important;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        gap: 1rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+      }
+
+      /* Ensure articles display below category */
+      #articles {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-left: 0 !important;
+      }
+
+      .w-96 {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      /* Make all buttons full width on mobile */
+      .category-button {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Make category descriptions full width */
+      .category-text {
+        width: 100% !important;
+        margin-left: 0 !important;
+      }
+
+      /* Full width articles container */
+      .articles-container {
+        width: 100%;
+        margin-left: 0 !important;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Make article items full width on mobile */
+      .articles-container .w-96 {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+      }
+
+      /* Make default message full width */
+      #default-message {
+        width: 100%;
+        padding: 1rem;
+      }
+    }
+
+    /* Extra small devices (less than 388px width) */
+    @media screen and (max-width: 388px) {
+      /* Reduce price text size for very small screens */
+      .w-30 span {
+        font-size: 0.875rem !important;
+      }
     }
 
 /* Modal styles */
@@ -394,7 +536,7 @@ textarea {
 
     </div>
 
-    <ul class="md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500">
+    <ul id="navMenu" class="md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500">
     <div class="icon-container">
     <li class="mx-4 md:my-0">
         <!--order now -->
@@ -500,8 +642,8 @@ textarea {
       </div>
     </div>
     <!-- Articles Options buttons  -->
-    <div class="flex flex-row mt-4 large-margin phone-margin">
-      <div class="flex flex-col">
+    <div class="main-container mt-4 large-margin phone-margin">
+      <div class="categories-section flex flex-col">
         <button onclick="displayArticles('text1','Household linen and bulky items')" class="flex items-center justify-between w-96 mb-5 bg-blue-500 text-white text-left text-xl font-bold  shadow hover:bg-blue-800 focus:bg-blue-600 transition duration-300" style="padding-left: 1rem; border-radius: 20px;">
           <span> Household linen and bulky items</span>
           <svg class="rounded-r-lg" height="70" viewBox="0 0 120 92" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -517,10 +659,10 @@ textarea {
             </g>
           </svg>
         </button>
-        <div id="text1" class="text-blue-950 hidden mb-6 w-96 pl-4 .category-text">We select programs according to the washing label instructions, the laundry is treated by our experts, and it is sanitized. Please allow 96 hours for bed linens, as well as 2 weeks for carpets, leather, and fur.
-        </div>
         <!-- Container for articles of the first category -->
         <div id="articles1" class="articles-container"></div>
+        <div id="text1" class="text-blue-950 hidden mb-6 w-96 pl-4 .category-text">We select programs according to the washing label instructions, the laundry is treated by our experts, and it is sanitized. Please allow 96 hours for bed linens, as well as 2 weeks for carpets, leather, and fur.
+        </div>
 
         <button onclick="displayArticles('text2','Laundry by weight (kg)')" class="flex items-center justify-between w-96 mb-5 bg-blue-500 text-white text-left text-xl font-bold  shadow hover:bg-blue-800 focus:outline focus:bg-blue-600 transition duration-300" style="padding-left: 1rem; border-radius: 15px;">
           <span class="mb-6">Laundry by weight (kg)</span>
@@ -546,10 +688,10 @@ textarea {
             </g>
           </svg>
         </button>
-        <div id="text2" class="text-blue-950 hidden mb-6 w-96 pl-4 .category-text">A perfect option <strong>for your sportswear, casual clothes, towels, home wear, and underwear</strong>. Ensure that the laundry is machine-washable and dryable,<strong> separate light colors from darks</strong>, if needed for stain removal, prefer the delicate laundry option.<span class="font-bold text-blue-600"> Do not include: sheets, shirts, sweaters, tablecloths, or aprons </span>in the laundry by weight.
-        </div>
         <!-- Container for articles of the second category -->
         <div id="articles2" class="articles-container"></div>
+        <div id="text2" class="text-blue-950 hidden mb-6 w-96 pl-4 .category-text">A perfect option <strong>for your sportswear, casual clothes, towels, home wear, and underwear</strong>. Ensure that the laundry is machine-washable and dryable,<strong> separate light colors from darks</strong>, if needed for stain removal, prefer the delicate laundry option.<span class="font-bold text-blue-600"> Do not include: sheets, shirts, sweaters, tablecloths, or aprons </span>in the laundry by weight.
+        </div>
 
         <button onclick="displayArticles('text3','Delicate laundry per piece')" class="flex items-center justify-between w-96 mb-5 bg-blue-500 text-white text-left text-xl font-bold  shadow hover:bg-blue-800 focus:outline focus:bg-blue-600 transition duration-300" style="padding-left: 1rem; border-radius: 15px;">
           <span class="mb-6">Delicate laundry per piece</span>
@@ -578,10 +720,10 @@ textarea {
             </g>
           </svg>
         </button>
+        <!-- Container for articles of the third category -->
+        <div id="articles3" class="articles-container"></div>
         <div id="text3" class="text-blue-950 hidden mb-6 w-96 pl-4 .category-text">Choose <strong> the High-Quality </strong> service if you need personalized care, enhanced stain removal, meticulous ironing, or treatment for branded garments or specific materials/details. Otherwise, opt for <strong> Careful service:</strong> items are carefully washed and hand-ironed by our experts.
         </div>
-        <!-- Container for articles of the second category -->
-        <div id="articles3" class="articles-container"></div>
 
         <button class="py-2 rounded-full flex items-center justify-center w-96 mb-5 bg-blue-500 text-white text-base font-bold shadow hover:bg-blue-800 focus:outline focus:bg-blue-600 transition duration-300">
           Have a Comment ?
@@ -592,10 +734,9 @@ textarea {
 
       </div>
       <!--  div for Articles options for categories -->
-      <div id="articles" class="flex flex-col" style="margin-left: 3rem;">
+      <div id="articles" class="articles-section flex flex-col" style="">
         <!-- Articles -->
         <p id="default-message">Please select a category to see available options</p>
-
 
       </div>
     </div>
@@ -1109,29 +1250,65 @@ function calculateTotal() {
     // Function to display articles of a category
     function displayArticles(textId, category) {
       var textElement = document.getElementById(textId);
+      
+      // Determine if we're on mobile (< 1024px)
+      const isMobile = window.innerWidth < 1024;
 
-      if (textElement.classList.contains('hidden')) {
-        textElement.classList.remove('hidden');
+      // Get the appropriate container based on screen size
+      let articlesContainer;
+      if (isMobile) {
+        // On mobile, display articles in the category-specific container
+        if (textId === 'text1') articlesContainer = document.getElementById('articles1');
+        else if (textId === 'text2') articlesContainer = document.getElementById('articles2');
+        else if (textId === 'text3') articlesContainer = document.getElementById('articles3');
       } else {
-        textElement.classList.add('hidden');
+        // On desktop, use the main articles section
+        articlesContainer = document.getElementById('articles');
       }
-
-      const articlesContainer = document.getElementById('articles');
+      
       const defaultMessage = document.getElementById('default-message');
 
+      // Check if this category is currently selected
       if (currentCategory === category) {
+        // Toggle off - clear articles and hide description
         articlesContainer.innerHTML = '';
+        textElement.classList.add('hidden');
 
-        if (defaultMessage) {
+        if (defaultMessage && !isMobile) {
           defaultMessage.style.display = 'block';
         }
+        
+        // Clear all category containers and descriptions
+        document.getElementById('articles1').innerHTML = '';
+        document.getElementById('articles2').innerHTML = '';
+        document.getElementById('articles3').innerHTML = '';
+        document.getElementById('text1').classList.add('hidden');
+        document.getElementById('text2').classList.add('hidden');
+        document.getElementById('text3').classList.add('hidden');
+        
         currentCategory = '';
         return;
       }
 
+      // Switching to a new category - First hide all other categories
+      // Hide all descriptions
+      document.getElementById('text1').classList.add('hidden');
+      document.getElementById('text2').classList.add('hidden');
+      document.getElementById('text3').classList.add('hidden');
+      
+      // Clear all articles containers
+      document.getElementById('articles1').innerHTML = '';
+      document.getElementById('articles2').innerHTML = '';
+      document.getElementById('articles3').innerHTML = '';
+      
+      // Now show the new category
       currentCategory = category;
+      textElement.classList.remove('hidden');
+      
+      // Clear the articles container
       articlesContainer.innerHTML = '';
-      if (defaultMessage) {
+      
+      if (defaultMessage && !isMobile) {
         defaultMessage.style.display = 'none';
       }
 
@@ -1194,7 +1371,7 @@ function calculateTotal() {
     // Function to toggle the mobile menu
     function Menu(e) {
       let list = document.querySelector('ul');
-      e.name === 'menu' ? (e.name = "close", list.classList.add('top-[80px]'), list.classList.add('opacity-100')) : (e.name = "menu", list.classList.remove('top-[80px]'), list.classList.remove('opacity-100'))
+      e.name === 'menu' ? (e.name = "close", list.classList.add('top-[80px]'), list.classList.add('opacity-100'), list.classList.add('menu-open')) : (e.name = "menu", list.classList.remove('top-[80px]'), list.classList.remove('opacity-100'), list.classList.remove('menu-open'))
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>

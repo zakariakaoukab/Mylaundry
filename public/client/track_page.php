@@ -86,6 +86,24 @@ $user_id = $_SESSION['auth_user']['id_user'];
       box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
+    /* Mobile menu opened - display horizontally */
+    #navMenu.menu-open {
+      flex-direction: row !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.5rem !important;
+      padding: 0.5rem !important;
+    }
+
+    #navMenu.menu-open .icon-container {
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    #navMenu.menu-open li {
+      margin-bottom: 0 !important;
+    }
+
     /* hr style*/
 
     .css-5t036d {
@@ -207,7 +225,7 @@ $user_id = $_SESSION['auth_user']['id_user'];
 
     </div>
 
-    <ul class="md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500">
+    <ul id="navMenu" class="md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500">
     <div class="icon-container">
     <li class="mx-4 md:my-0">
         <!--order now -->
@@ -397,7 +415,7 @@ $user_id = $_SESSION['auth_user']['id_user'];
 <script>
     function Menu(e) {
       let list = document.querySelector('ul');
-      e.name === 'menu' ? (e.name = "close", list.classList.add('top-[80px]'), list.classList.add('opacity-100')) : (e.name = "menu", list.classList.remove('top-[80px]'), list.classList.remove('opacity-100'))
+      e.name === 'menu' ? (e.name = "close", list.classList.add('top-[80px]'), list.classList.add('opacity-100'), list.classList.add('menu-open')) : (e.name = "menu", list.classList.remove('top-[80px]'), list.classList.remove('opacity-100'), list.classList.remove('menu-open'))
     }
   </script>
 </body>
