@@ -69,7 +69,7 @@ $con->close();
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <!-- PayPal SDK - COMMENTED OUT FOR CASH ON DELIVERY
-    <script src="https://www.paypal.com/sdk/js?client-id=AdYH8ai1mVZnlCssDLk1q9MeFtviYxptlmO1YZtQaxvGEH80A_0_iZc4ulrVpwR2TrsDg_9dqYVERl2D&currency=USD"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
     -->
     <style>
  /* Scroll bar styles */

@@ -33,7 +33,7 @@ function getConversionRate($amount) {
       // Fetch EUR to MAD rate
       $response = $client->request('GET', 'latest', [
           'query' => [
-              'access_key' => '9bc87331cac8edd88e1f6c3fb2b5a8a9',
+              'access_key' => 'API_KEY', // Replace with your actual API key
               'symbols' => 'MAD',
           ]
       ]);

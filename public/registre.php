@@ -9,8 +9,10 @@ require 'C:\xampp\htdocs\MyLaundry\vendor\autoload.php';
 
 
 function sendemail_verify($firstname,$email,$verify_token){
+// $mailConfig = require __DIR__ . '/../../config/config_mail.php';
 //Create an instance; passing `true` enables exceptions
 $mail = new PHPMailer(true);
+
 
 try {
     //Server settings
@@ -48,7 +50,7 @@ try {
 if (isset($_POST['signup'])) {
     $lastname = $_POST['lastname'];
     $firstname = $_POST['firstname'];
-    $email = $_POST['email'];
+    $email = strtolower(trim($_POST['email']));
     $phone = $_POST['phone'];
     $password = $_POST['password'];
     $street = $_POST['street'];
@@ -58,7 +60,7 @@ if (isset($_POST['signup'])) {
 
 
 //email already exist
-$check_email_query = "SELECT email from users WHERE email='$email' LIMIT 1";
+$check_email_query = "SELECT email FROM users WHERE LOWER(TRIM(email))='$email' LIMIT 1";
 $check_email_query_run = mysqli_query($con,$check_email_query);
 if(mysqli_num_rows($check_email_query_run) > 0)
 {
